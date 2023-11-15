@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field, InitVar
 from collections import deque
-from typing import Deque, Dict, List
-from datetime import datetime
+from typing import Deque, List
 
 from pyndicator.types.candlestick import OHLCV
 from pyndicator.types.time import Resolutions, TimeIndex
@@ -20,6 +19,7 @@ class Indicator(ABC):
     last_data: OHLCV = field(default_factory=OHLCV, init=False)
 
     data_list: InitVar[List[OHLCV]] # Needed to extend the signature of the __init__ method
+    
     def __post_init__(self, data_list: List[OHLCV]):
         if self.periods < 0:
             raise ValueError("size must be positive")
@@ -34,27 +34,27 @@ class Indicator(ABC):
         self.initialize()
         
 
-    def next(self, data: OHLCV, index: TimeIndex):
+    def next(self, data: OHLCV, candletime: TimeIndex):
         if len(self.data) < self.periods:
             self.data.appendleft(data)
 
-        if index % self.resolution_index != 0:
+        if candletime % self.resolution_index != 0:
             self.data[0] = data
-            self.next_value(self.data[0])
+            self.next_value()
         else: 
             self.data.appendleft(data)
-            self.rebase(self.data.pop())
+            self.rebase()
 
     @abstractmethod
     def initialize(self):
         pass
 
     @abstractmethod
-    def next_value(self, old_data: OHLCV):
+    def next_value(self):
         pass
 
     @abstractmethod
-    def rebase(self, old_data: OHLCV):
+    def rebase(self):
         pass
 
     @property
