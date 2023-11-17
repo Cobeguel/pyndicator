@@ -1,9 +1,6 @@
 from datetime import datetime, timezone
 from enum import Enum
-from dataclasses import dataclass, field
-from collections import deque
-from abc import ABC, abstractmethod
-from typing import Deque
+from dataclasses import dataclass
 
 class TimeResolution(Enum):
     SECOND = 1
@@ -45,6 +42,28 @@ class TimeIndex:
     
         self._update(int(dt.timestamp()))
 
+    def __mod__(self, t: "TimeIndex"):
+        return self.timestamp % t.timestamp
+
+class Resolutions(Enum):
+    seconds_1 = 1
+    seconds_5 = 5
+    seconds_15 = 15
+    seconds_30 = 30
+    minutes_1 = 60
+    minutes_3 = 180
+    minutes_5 = 300
+    minutes_10 = 600
+    minutes_15 = 900
+    minutes_30 = 1800
+    hours_1 = 3600
+    hours_2 = 7200
+    hours_4 = 14400
+    hours_6 = 21600
+    hours_8 = 28800
+    hours_12 = 43200
+    day = 86400
+    week = 604800 
 
 class CandleComponent(Enum):
     OPEN = "open"
@@ -74,13 +93,6 @@ class OHLCV:
             return self.volume
         else:
             raise ValueError("Invalid component: ", component)
-
-
-
-
-
-
-
     
-
-
+    def is_valid(self):
+        return self.open <= self.high or self.open >= self.low or self.close <= self.high or self.close >= self.low

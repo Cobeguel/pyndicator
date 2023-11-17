@@ -1,7 +1,6 @@
 import unittest
 
-from pyndicator.types.candlestick import OHLCV, CandleComponent
-from pyndicator.types.time import Resolutions, TimeIndex
+from pyndicator.types.candlestick import OHLCV, CandleComponent, Resolutions, TimeIndex
 from pyndicator.indicators.sma import SMA
 
 class TestSMA(unittest.TestCase):

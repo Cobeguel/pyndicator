@@ -3,8 +3,7 @@ from dataclasses import dataclass, field, InitVar
 from collections import deque
 from typing import Deque, List
 
-from pyndicator.types.candlestick import OHLCV
-from pyndicator.types.time import Resolutions, TimeIndex
+from pyndicator.types.candlestick import OHLCV, Resolutions, TimeIndex
 
 @dataclass
 class Indicator(ABC):
@@ -15,7 +14,7 @@ class Indicator(ABC):
     data: Deque[OHLCV] = field(default=None, init=False)
     values: Deque[float] = field(default=None, init=False)
     _rebase: bool = field(default=False, init=False)
-    resolution_index: TimeIndex = field(default_factory=lambda: TimeIndex(None), init=False)
+    resolution_index: TimeIndex = field(default_factory=lambda: TimeIndex(0), init=False)
     last_data: OHLCV = field(default_factory=OHLCV, init=False)
 
     data_list: InitVar[List[OHLCV]] # Needed to extend the signature of the __init__ method
